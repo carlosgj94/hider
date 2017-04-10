@@ -1,0 +1,14 @@
+Source: hider
+Section: x11
+Priority: extra
+Maintainer: Carlos Gonzalez Juarez <carlosgj94@gmail.com>
+Build-Depends: cmake (>= 2.8),
+               debhelper (>= 9),
+               valac (>= 0.16)
+Standards-Version: 3.9.3
+
+Package: hider
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: This is a hider app.
+ It will help you to hide those secret files and directories from your spy work. Trust us! :D
