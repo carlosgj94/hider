@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2017 Your Name <you@email.com> -->
+<component type="desktop">
+  <id>com.github.carlosgj94.hider.desktop</id>
+  <metadata_license>CC0</metadata_license>
+  <name>Hider</name>
+  <summary>Let me help you hidding those secret files from your spy work!</summary>
+  <description>
+    <p>Let me help you hidding those secret files from your spy work!. You can hide files and directories from here. To see them again, just enable hidden files in Files.</p>
+  </description>
+   <custom>
+     <value key="x-appcenter-color-primary">#603461</value>
+     <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
+     <value key="x-appcenter-suggested-price">0.50</value>
+  </custom>
+</component>
