@@ -2,6 +2,7 @@ using Gtk;
 
 public class hider : Window
 {
+    public bool switch_state = false;
     public static int main(string[] args)
     {
         Gtk.init(ref args);
@@ -71,7 +72,11 @@ public class hider : Window
             unhide_files(uris);
         });
 
+        //Infobar
+        var bar = get_infobar();
+        
         box.pack_start(chooser, true, true, 0);
+        box.pack_start(bar, false, false, 0);
         this.add(box);
     }
 
@@ -105,7 +110,6 @@ public class hider : Window
         var urif = uri[7: uri.length];
         var filename = urif[urif.last_index_of("/")+1: urif.length];
         if(filename[0:1] != "."){
-            stdout.printf("%s\n",filename.replace("%20", " "));
             try{
                 var file = File.new_for_path(urif.replace("%20", " "));
                 file.set_display_name("."+filename.replace("%20", " "));
@@ -131,13 +135,93 @@ public class hider : Window
 
     private void hide_directory(string uri)
     {
-        stdout.printf("File!");
+        if(switch_state)
+        {
+            var urif = uri[7: uri.length];
+            try{
+                var file = File.new_for_path(urif.replace("%20", " "));
+                //Sons changer
+                var cancellable = new Cancellable ();
+                var enumerator = file.enumerate_children (
+                    "standard::*",
+                    FileQueryInfoFlags.NOFOLLOW_SYMLINKS, 
+                    cancellable);
+
+                var info = enumerator.next_file();
+                while (info != null) {
+                        info = enumerator.next_file();
+                        var file_uri =  uri+ "/" + info.get_name();
+                        hide_single_file(file_uri);
+                }
+
+                if (cancellable.is_cancelled ()) {
+                    throw new IOError.CANCELLED ("Operation was cancelled");
+                }
+            }catch(Error e){
+                stdout.printf("Error %s\n", e.message);
+            }
+        }
         hide_single_file(uri);
     }
 
 
     private void unhide_directory(string uri)
     {
+        if(switch_state)
+        {
+            var urif = uri[7: uri.length];
+            try{
+                var file = File.new_for_path(urif.replace("%20", " "));
+                //Sons changer
+                var cancellable = new Cancellable ();
+                var enumerator = file.enumerate_children (
+                    "standard::*",
+                    FileQueryInfoFlags.NOFOLLOW_SYMLINKS, 
+                    cancellable);
+
+                var info = enumerator.next_file();
+                while (info != null) {
+                        info = enumerator.next_file();
+                        var file_uri =  uri+ "/" + info.get_name();
+                        unhide_single_file(file_uri);
+                }
+
+                if (cancellable.is_cancelled ()) {
+                    throw new IOError.CANCELLED ("Operation was cancelled");
+                }
+            }catch(Error e){
+                stdout.printf("Error %s\n", e.message);
+            }
+        }
         unhide_single_file(uri);
+    }
+
+    private Gtk.InfoBar get_infobar()
+    {
+        var bar = new Gtk.InfoBar();
+
+        var bar_container =  bar.get_content_area();
+        
+        //Box InfoBar
+        var _switch = new Gtk.Switch ();
+        var box_info = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+        box_info.pack_start(new Gtk.Label("Allow recursive hide: "), true, true, 0);
+        box_info.pack_start(_switch, false, false, 30);
+
+        bar_container.add(box_info);
+
+        //Switch click
+        _switch.notify["active"].connect (() => {
+			if (_switch.active) {
+				stdout.printf ("The switch is on!\n");
+                switch_state = true;
+			} else {
+				stdout.printf ("The switch is off!\n");
+                switch_state = false;
+			}
+		});
+
+
+        return bar;
     }
 }

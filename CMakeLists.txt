@@ -57,3 +57,5 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.carlosgj94.hider.desk
 
 # install our .appdata.xml file so AppCenter will see it
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.carlosgj94.hider.appdata.xml DESTINATION ${DATADIR}/metainfo/)
+
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/hider.svg DESTINATION ${DATADIR}/icons/hicolor/128x128/apps/)
